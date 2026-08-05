@@ -1,0 +1,5 @@
+# Ignore all PyTorch model checkpoint files anywhere in the repository
+*.pth
+
+# Ignore RF-DETR generated outputs
+/rf-detr/output/
