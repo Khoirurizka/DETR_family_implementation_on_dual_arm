@@ -67,12 +67,12 @@ The following examples are results from **my custom dataset**. They are not resu
 <td align="center"><b>RF-DETR Result</b></td>
 </tr>
 <tr>
-<td><img src="results/eye2_env_2.jpg" width="360" alt="Simulation input 1"></td>
-<td><img src="results/eye2_env_2_result_3.jpg" width="360" alt="Simulation RF-DETR result 1"></td>
+<td><img src="result/eye2_env_2.jpg" width="360" alt="Simulation input 1"></td>
+<td><img src="result/eye2_env_2_result_3.jpg" width="360" alt="Simulation RF-DETR result 1"></td>
 </tr>
 <tr>
-<td><img src="results/eye2_env_11.jpg" width="360" alt="Simulation input 2"></td>
-<td><img src="results/eye2_env_11_result_3.jpg" width="360" alt="Simulation RF-DETR result 2"></td>
+<td><img src="result/eye2_env_11.jpg" width="360" alt="Simulation input 2"></td>
+<td><img src="result/eye2_env_11_result_3.jpg" width="360" alt="Simulation RF-DETR result 2"></td>
 </tr>
 </table>
 
