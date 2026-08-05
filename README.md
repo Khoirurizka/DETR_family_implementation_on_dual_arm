@@ -1,65 +1,63 @@
-# Dual-Arm Robot Object Detection with DETR and RF-DETR
+# DETR and RF-DETR for Dual-Arm Robot Component Detection
 
-This project implements two transformer-based object-detection approaches for a dual-arm robotic assembly application:
+This project implements two transformer-based object detection approaches for a dual-arm robotic assembly task:
 
-- **DETR**, located in [`detr/`](detr/)
-- **RF-DETR**, located in [`rf-detr/`](rf-detr/)
+- `detr/` — a standard DETR implementation used as a baseline.
+- `rf-detr/` — an RF-DETR implementation fine-tuned on my own robotic dataset.
 
-Both models are trained and evaluated using **my own custom dataset** rather than a public benchmark dataset. The dataset contains simulation images from the dual-arm robot environment and real images collected from the physical setup.
+The objective is to detect mechanical components in both simulated and real-world scenes before robotic manipulation and assembly.
 
-## Objective
+## Detected Objects
 
-The objective is to detect harmonic-drive components before robotic manipulation and assembly. The current object classes are:
+The dataset contains two object classes:
 
 - `circular_spline`
 - `wave_generator`
 
-The detector returns the object class, confidence score, and bounding box. These outputs can later be connected to the robot perception and manipulation pipeline for object localization, grasp planning, and assembly.
+The images include different camera viewpoints, robot-arm occlusion, object orientations, lighting conditions, and backgrounds. Both simulation images and real camera images are used to evaluate whether the detector can generalize to the physical setup.
 
-## Repository Structure
+## Project Structure
 
 ```text
 .
-├── detr/              # DETR implementation
-├── rf-detr/           # RF-DETR implementation
-├── datasets/          # Custom dual-arm robot dataset
-├── results/           # Input images and detection results
+├── detr/          # Standard DETR implementation
+├── rf-detr/       # RF-DETR training and inference implementation
+├── result/        # Detection result images
+├── results.json   # RF-DETR evaluation metrics
 └── README.md
 ```
 
-## Dataset
+## RF-DETR Results
 
-The custom dataset includes:
+The following results were obtained from RF-DETR trained on my custom dual-arm robot dataset.
 
-- Synthetic images generated in the dual-arm robot simulation
-- Real camera images of the harmonic-drive components
-- Different viewpoints, object orientations, scales, and robot-arm occlusions
-- Bounding-box annotations for `circular_spline` and `wave_generator`
+### Validation Set
 
-The main workflow is:
+| Class | mAP@50 | mAP@50:95 | Precision | Recall | F1-score |
+|---|---:|---:|---:|---:|---:|
+| `circular_spline` | 0.9900 | 0.9208 | 0.9942 | 0.9942 | 0.9942 |
+| `wave_generator` | 1.0000 | 0.8776 | 1.0000 | 1.0000 | 1.0000 |
+| **Overall** | **0.9950** | **0.8992** | **0.9971** | **0.9971** | **0.9971** |
 
-```text
-Image Collection → Bounding-Box Annotation → Dataset Split
-                 → Model Training → Inference → Result Visualization
-```
+### Test Set
 
-## RF-DETR Implementation
+| Class | mAP@50 | mAP@50:95 | Precision | Recall | F1-score |
+|---|---:|---:|---:|---:|---:|
+| `circular_spline` | 1.0000 | 0.9571 | 1.0000 | 1.0000 | 1.0000 |
+| `wave_generator` | 1.0000 | 0.9291 | 1.0000 | 1.0000 | 1.0000 |
+| **Overall** | **1.0000** | **0.9431** | **1.0000** | **1.0000** | **1.0000** |
 
-RF-DETR is fine-tuned on the custom dual-arm robot dataset. In this project, it is used as the main detector because it provides a transformer-based detection pipeline suitable for both simulated and real robot images.
-
-The implementation performs the following steps:
-
-1. Loads the custom annotated dataset.
-2. Fine-tunes RF-DETR for the two target classes.
-3. Runs inference on simulation and real-world images.
-4. Draws the predicted class, confidence score, and bounding box.
-5. Saves the visualized predictions in the [`results/`](results/) directory.
+RF-DETR achieved an overall test **mAP@50:95 of 0.9431** and perfect test values for **mAP@50, precision, recall, and F1-score** on this dataset.
 
 ## Qualitative Results
 
-The following examples are results from **my custom dataset**. They are not results from COCO or another public dataset.
+### Simulation Environment
 
-### Simulation Dataset
+<p align="center">
+  <img src="result/eye2_env_2_result_3.jpg" width="32%" alt="RF-DETR simulation result 1" />
+  <img src="result/eye2_env_10_result_3.jpg" width="32%" alt="RF-DETR simulation result 2" />
+  <img src="result/eye2_env_11_result_3.jpg" width="32%" alt="RF-DETR simulation result 3" />
+</p>
 
 <table>
 <tr>
@@ -76,49 +74,27 @@ The following examples are results from **my custom dataset**. They are not resu
 </tr>
 </table>
 
-The simulation results show that RF-DETR can detect the components from different camera viewpoints, including cases where the robot arm partially blocks the scene.
+### Real-World Environment
 
-### Real-World Dataset
+<p align="center">
+  <img src="result/IMG_7344_result_3.jpg" width="32%" alt="RF-DETR real-world result 1" />
+  <img src="result/IMG_7345_result_3.jpg" width="32%" alt="RF-DETR real-world result 2" />
+  <img src="result/IMG_7346_result_3.jpg" width="32%" alt="RF-DETR real-world result 3" />
+</p>
 
-<table>
-<tr>
-<td align="center"><b>Input</b></td>
-<td align="center"><b>RF-DETR Result</b></td>
-</tr>
-<tr>
-<td><img src="results/IMG_7344.jpg" width="360" alt="Real-world input 1"></td>
-<td><img src="results/IMG_7344_result.jpg" width="360" alt="Real-world RF-DETR result 1"></td>
-</tr>
-<tr>
-<td><img src="results/IMG_7345.jpg" width="360" alt="Real-world input 2"></td>
-<td><img src="results/IMG_7345_result.jpg" width="360" alt="Real-world RF-DETR result 2"></td>
-</tr>
-</table>
+The real-world results show that the model can detect the same components under different orientations and viewing angles.
 
-The real-world examples show detections under different component appearances, orientations, and lighting conditions. The displayed confidence values are model predictions for each individual image.
+## Implementation Summary
 
-## DETR and RF-DETR
+The implementation follows this workflow:
 
-The [`detr/`](detr/) folder contains the baseline DETR implementation, while [`rf-detr/`](rf-detr/) contains the RF-DETR implementation used for the custom robotic dataset.
+1. Collect images from the dual-arm robot simulation and the real workcell.
+2. Annotate the `circular_spline` and `wave_generator` objects.
+3. Train DETR as a baseline detector.
+4. Fine-tune RF-DETR using the same custom dataset.
+5. Evaluate the model using mAP, precision, recall, and F1-score.
+6. Save annotated inference images in the `result/` directory.
 
-| Implementation | Purpose |
-|---|---|
-| DETR | Baseline transformer detector for comparison and experimentation |
-| RF-DETR | Main fine-tuned detector for the dual-arm robot dataset |
+## Current Scope
 
-A complete comparison should use the same train, validation, and test split and report metrics such as precision, recall, mAP@50, mAP@50:95, and inference latency.
-
-## Current Status
-
-- [x] Prepare a custom dual-arm robot dataset
-- [x] Define the `circular_spline` and `wave_generator` classes
-- [x] Implement DETR
-- [x] Implement and fine-tune RF-DETR
-- [x] Test on simulation images
-- [x] Test on real-world images
-- [ ] Add quantitative DETR versus RF-DETR evaluation
-- [ ] Connect detection results to robot grasping and assembly
-
-## Notes
-
-This repository contains an application and fine-tuning of DETR-based detectors for a custom robotic dataset. RF-DETR itself was developed by Roboflow; this project focuses on training, evaluation, and integration for the dual-arm robot use case.
+This repository currently focuses on object detection. The detected bounding boxes and class labels can later be connected to the dual-arm robot perception and manipulation pipeline for object localization, grasp planning, and assembly.
