@@ -7,6 +7,19 @@ This project implements two transformer-based object detection approaches for a 
 
 The objective is to detect mechanical components in both simulated and real-world scenes before robotic manipulation and assembly.
 
+## Dataset
+
+This project uses my custom dual-arm robot dataset, **`Harmonic_Drive-7`**. The dataset contains **2,918 annotated images** divided into the following splits:
+
+| Split | Number of images |
+|---|---:|
+| Training | 2,619 |
+| Validation | 249 |
+| Test | 50 |
+| **Total** | **2,918** |
+
+The dataset includes images from simulation and the real dual-arm robot workcell. It is used to train and evaluate both DETR and RF-DETR under the same task conditions.
+
 ## Detected Objects
 
 The dataset contains two object classes:
@@ -59,20 +72,7 @@ RF-DETR achieved an overall test **mAP@50:95 of 0.9431** and perfect test values
   <img src="result/eye2_env_11_result_3.jpg" width="32%" alt="RF-DETR simulation result 3" />
 </p>
 
-<table>
-<tr>
-<td align="center"><b>Input</b></td>
-<td align="center"><b>RF-DETR Result</b></td>
-</tr>
-<tr>
-<td><img src="result/eye2_env_2.jpg" width="360" alt="Simulation input 1"></td>
-<td><img src="result/eye2_env_2_result_3.jpg" width="360" alt="Simulation RF-DETR result 1"></td>
-</tr>
-<tr>
-<td><img src="result/eye2_env_11.jpg" width="360" alt="Simulation input 2"></td>
-<td><img src="result/eye2_env_11_result_3.jpg" width="360" alt="Simulation RF-DETR result 2"></td>
-</tr>
-</table>
+The model detects the components even when the dual-arm robot partially blocks the camera view.
 
 ### Real-World Environment
 
